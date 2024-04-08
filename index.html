@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.8/dist/cdn.min.js"></script>
+</head>
+
+<body>
+    <div
+        x-data="{message:'Task Management',btn_msg:'Create New Task',todos:[],userInput:'',userDescription:'', showModal: false}">
+        <nav class="bg-blue-500 p-3 flex justify-between align-center">
+            <h1 x-text="message" class="text-white font-semibold text-xl"></h1>
+            <form action="" x-on:submit.prevent>
+                <button x-text="btn_msg" class="text-white bg-green-400 p-2 rounded font-semibold"
+                    x-on:click="showModal = true;"></button>
+            </form>
+        </nav>
+
+        <!-- Modal -->
+        <div x-show="showModal"
+            class="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center">
+            <div class="bg-zinc-300 p-6 rounded-lg shadow-xl">
+                <!-- <h2 class="text-lg font-semibold mb-4">Task Created Successfully!</h2> -->
+
+                <form action="" x-on:submit.prevent class="flex flex-col justify-between gap-5">
+                    <label>Title</label>
+                    <input type="text" x-model="userInput"
+                        class="border-none outline-none py-[10px] px-2 rounded-[10px]">
+                    <label>Description</label>
+                    <input type="text" x-model="userDescription"
+                        class="border-none outline-none py-[10px] px-2 rounded-[10px]">
+                    <button
+                        x-on:click="showModal = false; if(userInput.trim().length > 0 && userDescription.trim().length > 0) todos.push({name:userInput,description:userDescription,completed:false}); userInput=''"
+                        class="bg-blue-500 text-white px-4 py-2 rounded-lg">Add New Task</button>
+                </form>
+            </div>
+        </div>
+
+        <ul
+            class="flex flex-col align-between gap-3 border-1 border-[#eee] w-auto rounded-md  m-5 mt-[50px] bg-slate-100 p-[20px]">
+
+            <template x-for="todo in todos">
+                <li class="flex w-full flex-col p-2  justify-between border-1">
+                    <div class="flex flex-col items-start gap-3">
+                        <p class="font-bold">Title</p>
+                        <p x-text="todo.name"></p>
+                        <p class="font-semibold">Description</p>
+                        <p class="max-w-[350px] text-[#716969]" x-text="todo.description">Description</p>
+                        <p>Completed</p>
+
+                        <input type="checkbox" name="" id="">
+                    </div>
+                    <div class="btns d-flex">
+                        <button @click="todos = todos.filter(currTodo => currTodo != todo)"
+                            class="bg-red-600 text-white my-3 font-semibold py-2 px-5 rounded-3xl">
+                            Delete
+                        </button>
+                    </div>
+                </li>
+            </template>
+        </ul>
+    </div>
+</body>
+
+</html>
