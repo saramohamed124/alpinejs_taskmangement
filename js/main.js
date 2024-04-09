@@ -69,7 +69,6 @@ function todoList(){
 
         toggleCompleted(index){
             this.todos[index].completed=!this.todos[index].completed
-            this.saveToLocalStorage(); // Save to local storage
         },
         filteredTodos() {
             if (this.filterCompleted) {
@@ -78,9 +77,5 @@ function todoList(){
                 return this.todos;
             }
         },
-        editTodos(todo){
-            todo.setAttribute("contenteditable","true");
-        }
     }
-   
 }
