@@ -11,9 +11,9 @@
 
 <body>
 
-    <div
-        x-data="{message:'Task Management',btn_msg:'Create New Task',todos:[],userInput:'',userDescription:'', showModal: false}">
-        <nav class="bg-blue-500 p-3 flex justify-between align-center">
+    <div x-data="todoList()">
+        <nav x-data="{message:'Task Management',btn_msg:'Create New Task'}"
+            class="bg-blue-500 p-3 flex justify-between align-center">
             <h1 x-text="message" class="text-white font-semibold text-xl"></h1>
             <form action="" x-on:submit.prevent>
                 <button x-text="btn_msg" class="text-white bg-green-400 p-2 rounded font-semibold"
@@ -44,27 +44,29 @@
             <div class="bg-zinc-300 p-6 rounded-lg shadow-xl">
                 <form action="" x-on:submit.prevent class="flex flex-col justify-between gap-5">
                     <label>Title</label>
-                    <input type="text" x-model="userInput"
+                    <input type="text" x-model="todoName"
                         class="border-none outline-none py-[10px] px-2 rounded-[10px]">
                     <label>Description</label>
-                    <input type="text" x-model="userDescription"
+                    <input type="text" x-model="todoDescription"
                         class="border-none outline-none py-[10px] px-2 rounded-[10px]">
-                    <button
-                        x-on:click="showModal = false; if(userInput.trim().length > 0 && userDescription.trim().length > 0) todos.push({name:userInput,description:userDescription,completed:false}); userInput='',userDescription=''"
+                    <button x-on:click="
+                    showModal=false; 
+                    if(todoName.trim().length > 0 && todoDescription.trim().length > 0) {add()}"
                         class="bg-blue-500 text-white px-4 py-2 rounded-lg">Add New Task</button>
                 </form>
             </div>
         </div>
+        <button x-on:click="toggleFilterCompleted" class="w-100 px-4 py-2 rounded-lg m-[20px auto]"><img
+                src="./assets/imgs/filter.svg" alt=""></button>
 
-
-        <ul class=" text-center  border-1 border-[#eee] w-auto rounded-md  m-5 mt-[50px] bg-slate-100 p-[20px]">
-            <template x-for="todo in todos">
+        <ul class="text-center border-1 border-[#eee] w-auto rounded-md m-5 mt-[50px] bg-slate-100 p-[20px]">
+            <template x-for="(todo, index) in filteredTodos" :key="index">
 
                 <div x-data="{ open: false }"
                     class="grid grid-cols-3 gap-4 items-center border-b-[1px] border-[#ccc] border-solid">
 
                     <div>
-                        <p x-text="todo.name" x-bind:class="{'line-through':todo.completed}"></p>
+                        <p x-text="todo.name" :key="index" x-bind:class="{'line-through':todo.completed}"></p>
                     </div>
                     <div class="">
                         <button x-on:click="open = ! open"><svg class="w-6 h-6 text-gray-800 dark:text-white"
@@ -76,25 +78,28 @@
                         </button>
                     </div>
                     <div class="btns d-flex">
-                        <button @click="todos = todos.filter(currTodo => currTodo != todo)"
+                        <button @click="remove(index)"
                             class="bg-red-600 text-white my-3 font-semibold py-2 px-5 rounded-3xl">
                             Delete
                         </button>
                     </div>
                     <div class="col-span-2" x-show="open" id="contentEdit">
-                        <li class="flex w-full flex-col p-2  justify-between border-1">
+                        <li class="list flex w-full flex-col p-2  justify-between border-1">
                             <div class="flex flex-col items-start gap-3">
                                 <p class="font-bold">Title</p>
-                                <p x-text="todo.name" x-bind:class="{'line-through':todo.completed}"
-                                    contenteditable="false" id="taskTitle">
+                                <p x-text="todo.name" x-data="{todoName:todo.name}" data-title="todo.name"
+                                    x-bind:class="{'line-through':todo.completed}" contenteditable="false"
+                                    id="taskTitle">
                                 </p>
                                 <p class="font-bold">Description</p>
-                                <p class="max-w-[350px] text-[#716969]" x-bind:class="{'line-through':todo.completed}"
-                                    contenteditable="false" x-text="todo.description" id="taskDescription">
+                                <p class="max-w-[350px] text-[#716969]" data-description="todo.description"
+                                    x-bind:class="{'line-through':todo.completed}" contenteditable="false"
+                                    x-text="todo.description" id="taskDescription">
                                 </p>
-                                <input type="checkbox" x-model="todo.completed">
+                                <input type="checkbox" x-model="todo.completed" data-compeleted="todo.completed"
+                                    x-on:click="toggleCompleted(index)">
                                 <button class="bg-green-400 text-white my-3 font-semibold py-2 px-5 rounded-3xl"
-                                    id="editBtn">Edit</button>
+                                    id="editBtn" x-on:click="editTodos(todo.name)">Edit</button>
                             </div>
 
                         </li>
@@ -102,8 +107,13 @@
                     </div>
 
                 </div>
+
             </template>
-        </ul>
+
+    </div>
+
+
+    </ul>
     </div>
     <script src="js/main.js"></script>
 </body>
