@@ -10,6 +10,7 @@
 </head>
 
 <body>
+
     <div
         x-data="{message:'Task Management',btn_msg:'Create New Task',todos:[],userInput:'',userDescription:'', showModal: false}">
         <nav class="bg-blue-500 p-3 flex justify-between align-center">
@@ -20,12 +21,27 @@
             </form>
         </nav>
 
+
+        <!-- Header -->
+        <div class="flex justify-around gap-3 sm:flex-row flex-col  items-center p-3">
+            <img src="./assets/imgs/checklist.gif" alt="checklist" class="img-fluid max-w-full flex-1">
+            <div class="flex-1 text-center flex flex-col items-center justify-center">
+                <h3 class="text-blue-500 w-fit p-3 text-4xl font-semibold mb-3">Manage Your
+                    Time</h3>
+                <p class="text-zinc-400"> Task management is defined as a strategic and dynamic system designed for
+                    efficient
+                    planning
+                    and
+                    execution of tasks, ensuring a streamlined path to successful completion. Learn more about task
+                    management steps, importance, benefits, tools and </p>
+            </div>
+
+        </div>
+
         <!-- Modal -->
         <div x-show="showModal"
             class="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center">
             <div class="bg-zinc-300 p-6 rounded-lg shadow-xl">
-                <!-- <h2 class="text-lg font-semibold mb-4">Task Created Successfully!</h2> -->
-
                 <form action="" x-on:submit.prevent class="flex flex-col justify-between gap-5">
                     <label>Title</label>
                     <input type="text" x-model="userInput"
@@ -34,25 +50,30 @@
                     <input type="text" x-model="userDescription"
                         class="border-none outline-none py-[10px] px-2 rounded-[10px]">
                     <button
-                        x-on:click="showModal = false; if(userInput.trim().length > 0 && userDescription.trim().length > 0) todos.push({name:userInput,description:userDescription,completed:false}); userInput=''"
+                        x-on:click="showModal = false; if(userInput.trim().length > 0 && userDescription.trim().length > 0) todos.push({name:userInput,description:userDescription,completed:false}); userInput='',userDescription=''"
                         class="bg-blue-500 text-white px-4 py-2 rounded-lg">Add New Task</button>
                 </form>
             </div>
         </div>
 
-        <ul
-            class="flex flex-col align-between gap-3 border-1 border-[#eee] w-auto rounded-md  m-5 mt-[50px] bg-slate-100 p-[20px]">
 
+        <ul class=" text-center  border-1 border-[#eee] w-auto rounded-md  m-5 mt-[50px] bg-slate-100 p-[20px]">
             <template x-for="todo in todos">
-                <li class="flex w-full flex-col p-2  justify-between border-1">
-                    <div class="flex flex-col items-start gap-3">
-                        <p class="font-bold">Title</p>
-                        <p x-text="todo.name"></p>
-                        <p class="font-semibold">Description</p>
-                        <p class="max-w-[350px] text-[#716969]" x-text="todo.description">Description</p>
-                        <p>Completed</p>
 
-                        <input type="checkbox" name="" id="">
+                <div x-data="{ open: false }"
+                    class="grid grid-cols-3 gap-4 items-center border-b-[1px] border-[#ccc] border-solid">
+
+                    <div>
+                        <p x-text="todo.name" x-bind:class="{'line-through':todo.completed}"></p>
+                    </div>
+                    <div class="">
+                        <button x-on:click="open = ! open"><svg class="w-6 h-6 text-gray-800 dark:text-white"
+                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="m19 9-7 7-7-7" />
+                            </svg>
+                        </button>
                     </div>
                     <div class="btns d-flex">
                         <button @click="todos = todos.filter(currTodo => currTodo != todo)"
@@ -60,10 +81,32 @@
                             Delete
                         </button>
                     </div>
-                </li>
+                    <div class="col-span-2" x-show="open" id="contentEdit">
+                        <li class="flex w-full flex-col p-2  justify-between border-1">
+                            <div class="flex flex-col items-start gap-3">
+                                <p class="font-bold">Title</p>
+                                <p x-text="todo.name" x-bind:class="{'line-through':todo.completed}"
+                                    contenteditable="false" id="taskTitle">
+                                </p>
+                                <p class="font-bold">Description</p>
+                                <p class="max-w-[350px] text-[#716969]" x-bind:class="{'line-through':todo.completed}"
+                                    contenteditable="false" x-text="todo.description" id="taskDescription">
+                                </p>
+                                <input type="checkbox" x-model="todo.completed">
+                                <button class="bg-green-400 text-white my-3 font-semibold py-2 px-5 rounded-3xl"
+                                    id="editBtn">Edit</button>
+                            </div>
+
+                        </li>
+
+                    </div>
+
+                </div>
             </template>
         </ul>
     </div>
+    <script src="js/main.js"></script>
 </body>
+
 
 </html>
